@@ -1,9 +1,15 @@
 [tool.poetry]
-name = "jsonformer"
+name = "guardrails-jsonformer"
 version = "0.12.0"
-description = ""
+description = "A fork of 1rgs' jsonformer maintained by Guardrails AI"
 authors = ["1rgs <rgsduke@gmail.com>"]
+maintainers = ["Guardrails AI <contact@guardrailsai.com>"]
+homepage = "https://github.com/guardrails-ai/jsonformer"
 readme = "README.md"
+package-mode = true
+packages = [
+    { include = "jsonformer", from = "." }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -12,7 +18,7 @@ termcolor = "^2.3.0"
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.22.0"
 torch = "^2.0.0"
-accelerate = "^0.18.0"
+accelerate = "^0.26.0"
 bitsandbytes = "^0.38.1"
 transformers = "^4.27.4"
 
