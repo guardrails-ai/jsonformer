@@ -41,7 +41,7 @@ jobs:
         pip install .
 
         # Install extra stuff for notebook runs
-        pip install "huggingface_hub[cli]" jupyter nbconvert
+        pip install "huggingface_hub[cli]" jupyter nbconvert torch
     - name: Huggingface Hub Login
       run: |
         source .venv/bin/activate
