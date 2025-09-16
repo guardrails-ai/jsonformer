@@ -20,7 +20,7 @@ ipykernel = "^6.22.0"
 torch = "^2.0.0"
 accelerate = "^0.26.0"
 bitsandbytes = "^0.38.1"
-transformers = "^4.27.4"
+transformers = "^4.48.0"
 
 
 [build-system]
