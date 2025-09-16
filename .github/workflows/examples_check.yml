@@ -11,7 +11,7 @@ on:
 
 jobs:
   execute_notebooks:
-    runs-on: ubuntu-latest
+    runs-on: LargeBois
     strategy:
       matrix:
         transformers_version: ["transformers==4.48.0", "transformers==4.56.1", "--upgrade transformers"]
