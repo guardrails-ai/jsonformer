@@ -49,7 +49,6 @@ jobs:
     - name: Execute notebooks and check for errors
       run: |
         source .venv/bin/activate
-        bash ./.github/workflows/scripts/run_notebooks.sh ${{ matrix.notebook }}
         echo "Processing ${{ matrix.notebook }}..."
         # poetry run jupyter nbconvert --to notebook --execute "${{ matrix.notebook }}"
         jupyter nbconvert --to notebook --execute "${{ matrix.notebook }}"
