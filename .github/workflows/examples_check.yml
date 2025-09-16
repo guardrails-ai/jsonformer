@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        transformers_version: ["transformers==4.27.4", "transformers==4.56.1", "--upgrade transfomers"]
+        transformers_version: ["transformers==4.27.4", "transformers==4.56.1", "--upgrade transformers"]
         notebook: ["example.ipynb","Jsonformer_example.ipynb"]
     env:
       HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
