@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "guardrails-jsonformer"
-version = "0.12.0"
+version = "0.12.1"
 description = "A fork of 1rgs' jsonformer maintained by Guardrails AI"
 authors = ["1rgs <rgsduke@gmail.com>"]
 maintainers = ["Guardrails AI <contact@guardrailsai.com>"]
@@ -20,7 +20,7 @@ ipykernel = "^6.22.0"
 torch = "^2.0.0"
 accelerate = "^0.26.0"
 bitsandbytes = "^0.38.1"
-transformers = "^4.48.0"
+transformers = "^4.45.0"
 
 
 [build-system]
