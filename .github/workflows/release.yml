@@ -1,15 +1,25 @@
 name: Release New PyPi Version
 
+permissions:
+  id-token: write
+  contents: write
+
 on:
   workflow_dispatch: # This event allows manual triggering
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
+        with:
+          fetch-tags: true
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -28,7 +38,53 @@ jobs:
       - name: Install dependencies
         run: poetry install --all-extras
 
+      - name: Check for version bump
+        id: version
+        continue-on-error: false
+        shell: bash {0}
+        run: |
+          PYPROJECT_TOML="pyproject.toml"
+
+          # Extract the version using grep and sed
+          version=$(grep -m 1 "version" "$PYPROJECT_TOML" | sed -E 's/.*version[[:space:]]*=[[:space:]]*"([^"]*)".*/\1/')
+
+          echo "Project version: $version"
+
+          if [ -z "$version" ]
+          then
+            echo "Missing version file!"
+            echo "Repository must have a package.json or a version.txt file!"
+            exit 1
+          fi
+
+          echo "Checking if $version already exists..."
+          version_commit="$(git rev-parse "$version" 2>/dev/null)"
+          if [ ! -z "$version_commit" ] && [ "$version_commit" != "$version" ];
+          then
+              echo "Version $version already exist on commit $version_commit!"
+              echo "Abandoning build..."
+              echo "To complete this release update the version field in the package.json with an appropriate semantic version."
+              exit 1
+          else
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
       - name: Upload to PyPI
         env:
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: poetry publish --build -u __token__ -p $PYPI_PASSWORD
+
+      - name: Tag
+        id: tag
+        continue-on-error: false
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          echo "Configuring github bot"
+          git config user.name "github-actions[bot]"
+          # Comes from https://api.github.com/users/github-actions%5Bbot%5D
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "Creating github tag: $version"
+          git tag "$version"
+          echo "Pushing tags"
+          git push --tags
