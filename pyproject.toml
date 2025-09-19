@@ -1,15 +1,17 @@
-[tool.poetry]
+[project]
 name = "guardrails-jsonformer"
-version = "0.13.0"
+version = "0.13.1"
 description = "A fork of 1rgs' jsonformer maintained by Guardrails AI"
-authors = ["1rgs <rgsduke@gmail.com>"]
-maintainers = ["Guardrails AI <contact@guardrailsai.com>"]
+authors = [
+    {name = "1rgs", email = "rgsduke@gmail.com"}
+]
+maintainers = [
+    {name = "Guardrails AI", email = "contact@guardrailsai.com"}
+]
 homepage = "https://github.com/guardrails-ai/jsonformer"
 readme = "README.md"
-package-mode = true
-packages = [
-    { include = "jsonformer", from = "." }
-]
+requires-python = ">=3.9,<4.0"
+
 
 [tool.poetry.dependencies]
 # Bc triton, a dependency of torch, requires this range
@@ -25,8 +27,14 @@ bitsandbytes = "<0.43.0"
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = true
+packages = [
+    { include = "jsonformer", from = "." }
+]
 
 [virtualenvs]
 create = true
