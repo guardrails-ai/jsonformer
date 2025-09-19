@@ -1,0 +1,62 @@
+name: Notebook Execution and Error Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # This enables manual triggering
+
+jobs:
+  execute_notebooks:
+    runs-on: LargeBois
+    strategy:
+      matrix:
+        transformers_version: ["transformers==4.48.0", "transformers==4.56.1", "--upgrade transformers"]
+        notebook: ["example.ipynb","Jsonformer_example.ipynb"]
+    env:
+      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+      NLTK_DATA: /tmp/nltk_data
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with: 
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0 
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with: 
+        python-version: 3.12.x
+    - name: Install dependencies
+      run: |
+
+        # Setup Virtual Environment
+        python3 -m venv ./.venv
+        source .venv/bin/activate
+
+        # Install the current branch
+        pip install ${{ matrix.transformers_version }}
+        pip install .
+
+        # Install extra stuff for notebook runs
+        pip install "huggingface_hub[cli]" jupyter nbconvert ipykernel torch accelerate bitsandbytes
+    - name: Huggingface Hub Login
+      run: |
+        source .venv/bin/activate
+        huggingface-cli login --token $HUGGINGFACE_API_KEY
+    - name: Execute notebooks and check for errors
+      run: |
+        source .venv/bin/activate
+        echo "Processing ${{ matrix.notebook }}..."
+        # poetry run jupyter nbconvert --to notebook --execute "${{ matrix.notebook }}"
+        jupyter nbconvert --to notebook --execute "${{ matrix.notebook }}"
+        if [ $? -ne 0 ]; then
+          echo "Error found in ${{ matrix.notebook }}"
+          echo "Error in ${{ matrix.notebook }}. See logs for details." >> errors.txt
+          exit 1
+        fi
+
+        exit 0
+

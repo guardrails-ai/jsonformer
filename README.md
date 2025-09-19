@@ -121,3 +121,4 @@ poetry run python -m jsonformer.example
 ## License
 
 Jsonformer is released under the MIT License. You are free to use, modify, and distribute this software for any purpose, commercial or non-commercial, as long as the original copyright and license notice are included.
+
